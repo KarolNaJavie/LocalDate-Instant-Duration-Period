@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
-    static void main() {
+    public static void main() {
 
         //DATY I CZAS
 
@@ -171,20 +171,21 @@ public class Main {
         while (matcher.find()) {
             dataUtworzenia = LocalDateTime.of(Integer.parseInt(matcher.group(3).trim()), Integer.parseInt(matcher.group(2).trim()), Integer.parseInt(matcher.group(1).trim()), Integer.parseInt(matcher.group(4).trim()), Integer.parseInt(matcher.group(5).trim()));
         }
+        if (dataUtworzenia != null) {
+            System.out.println("Obiekt LocalDateTime: " + dataUtworzenia);
+            Duration ileMinelo = Duration.between(dataUtworzenia, LocalDateTime.now());
+            Long ileMineloMinut = ileMinelo.toMinutes();
+            Long ileMineloGodzin = ileMinelo.toHours();
+            System.out.println("Do teraz minelo " + ileMineloGodzin + " godzin, czyli " + ileMineloMinut + " minut.");
 
-        System.out.println("Obiekt LocalDateTime: " + dataUtworzenia);
-
-        Duration ileMinelo = Duration.between(dataUtworzenia, LocalDateTime.now());
-        Long ileMineloMinut = ileMinelo.toMinutes();
-        Long ileMineloGodzin = ileMinelo.toHours();
-        System.out.println("Do teraz minelo " + ileMineloGodzin + " godzin, czyli " + ileMineloMinut + " minut.");
-
-        if (ileMineloGodzin > 24) {
-            System.out.println("Obiekt jest starszy niz 24h");
+            if (ileMineloGodzin > 24) {
+                System.out.println("Obiekt jest starszy niz 24h");
+            } else {
+                System.out.println("Obiekt jest mlodszy lub rowny 24h");
+            }
         } else {
-            System.out.println("Obiekt jest mlodszy lub rowny 24h");
+            System.out.println("Podana data jest nieprawidlowa");
         }
-
         System.out.println("\nzadanie2\n");
 //        ZADANIE 2 – WIEK CZŁOWIEKA
 //        -----------------------------------------------------------------------------
@@ -200,7 +201,7 @@ public class Main {
 //        nie licz wieku na sekundach
 //        rok i miesiąc nie mają stałej długości
 //                /
-        String dataUrodzeniaString = "1995-05-20";
+        String dataUrodzeniaString = "1995-01-20";
         Pattern pattern1 = Pattern.compile("(\\d+)-(\\d+)-(\\d+)");
         Matcher matcher1 = pattern1.matcher(dataUrodzeniaString);
         LocalDate dataUrodzenia = null;
@@ -215,15 +216,13 @@ public class Main {
         LocalDate urodzinyWTymRoku = dataUrodzenia.withYear(LocalDate.now().getYear());
         Boolean czyMial = urodzinyWTymRoku.isBefore(LocalDate.now());
 
-        if (czyMial) {
+        if (czyMial || LocalDate.now().equals(urodzinyWTymRoku)) {
             System.out.println("Dana osoba miala juz urodziny");
+            System.out.println("Do urodzin zostalo : " + (365 + checkDate(urodzinyWTymRoku)) + " dni");
         } else {
             System.out.println("Dana osoba nie miala jeszcze urodzin");
+            System.out.println("Do urodzin zostalo : " + checkDate(urodzinyWTymRoku) + " dni");
         }
-        LocalDateTime urodzinyWTymRokuDateTime = urodzinyWTymRoku.atStartOfDay();                        // zmiana na localdatetime zeby duration zadzialal bo period nie policzy dokladnie dni
-        Duration ileDoUrodzin = Duration.between(LocalDate.now().atStartOfDay(), urodzinyWTymRokuDateTime);
-        Long ileDniDoUrodzin = ileDoUrodzin.toDays();
-        System.out.println("Do urodzin zostalo : " + ileDniDoUrodzin + " dni");
 
 
         System.out.println("\nZadanie3\n");
@@ -259,4 +258,12 @@ public class Main {
         System.out.println("7 dni pozniej:  " + jakasData.plusDays(7));
         System.out.println("tekst w formacie yyyy-MM-dd HH:mm - " + jakasData.getYear() + "-" + jakasData.getMonthValue() + "-" + jakasData.getDayOfMonth() + " " + jakasData.getHour() + ":" + jakasData.getMinute());
     }
+
+    public static Long checkDate(LocalDate urodzinyWTymRoku) {
+        LocalDateTime urodzinyWTymRokuDateTime = urodzinyWTymRoku.atStartOfDay();                        // zmiana na localdatetime zeby duration zadzialal bo period nie policzy dokladnie dni
+        Duration ileDoUrodzin = Duration.between(LocalDate.now().atStartOfDay(), urodzinyWTymRokuDateTime);
+        Long ileDniDoUrodzin = ileDoUrodzin.toDays();
+        return ileDniDoUrodzin;
+    }
+
 }
