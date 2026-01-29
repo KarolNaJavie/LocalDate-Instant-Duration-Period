@@ -1,6 +1,7 @@
 package org.example;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.IntSummaryStatistics;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -256,7 +257,9 @@ public class Main {
 
         System.out.println("Obiekt LocalDateTime: " + jakasData);
         System.out.println("7 dni pozniej:  " + jakasData.plusDays(7));
-        System.out.println("tekst w formacie yyyy-MM-dd HH:mm - " + jakasData.getYear() + "-" + jakasData.getMonthValue() + "-" + jakasData.getDayOfMonth() + " " + jakasData.getHour() + ":" + jakasData.getMinute());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        System.out.println("tekst w formacie yyyy-MM-dd HH:mm - " + jakasData.format(formatter));
     }
 
     public static Long checkDate(LocalDate urodzinyWTymRoku) {
